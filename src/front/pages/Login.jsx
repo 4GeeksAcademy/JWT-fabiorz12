@@ -1,23 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 const Login = () => {
+  const { store, dispatch } = useGlobalReducer();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch(process.env.BACKEND_URL + "/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-
-    if (res.status === 200) {
-      sessionStorage.setItem("token", data.access_token);
+    const success = await store.actions.login(email, password);
+    if (success) {
       navigate("/private");
     } else {
       alert("Credenciales incorrectas");
@@ -25,12 +19,28 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <div className="container">
       <h2>Iniciar sesión</h2>
-      <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
-      <input type="password" placeholder="Contraseña" onChange={(e) => setPassword(e.target.value)} required />
-      <button type="submit">Entrar</button>
-    </form>
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="form-control my-2"
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="form-control my-2"
+        />
+        <button type="submit" className="btn btn-primary">
+          Entrar
+        </button>
+      </form>
+    </div>
   );
 };
 

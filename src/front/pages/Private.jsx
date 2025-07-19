@@ -2,27 +2,38 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Private = () => {
-  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    if (!token) return navigate("/login");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
-    fetch(process.env.BACKEND_URL + "/api/private", {
+    fetch(process.env.BACKEND_URL + "/private", {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        if (res.status !== 200) throw new Error("No autorizado");
-        return res.json();
+        if (res.ok) return res.json();
+        else throw new Error("No autorizado");
       })
-      .then((data) => setMessage(data.msg))
-      .catch(() => navigate("/login"));
+      .then((data) => setMessage(data.message))
+      .catch((err) => {
+        console.error(err);
+        navigate("/login");
+      });
   }, []);
 
-  return <h2>{message || "Cargando..."}</h2>;
+  return (
+    <div className="container">
+      <h2>Zona Privada</h2>
+      <p>{message}</p>
+    </div>
+  );
 };
 
 export default Private;
