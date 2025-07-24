@@ -5,8 +5,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    navigate("/login");
+    actions.logout();
+    navigate("/login") 
   };
 
   return (

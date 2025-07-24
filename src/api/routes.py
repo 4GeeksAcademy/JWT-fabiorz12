@@ -13,8 +13,6 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-
-
 @api.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -36,6 +34,7 @@ def signup():
 
     return jsonify({"msg": "Usuario creado correctamente"}), 201
 
+
 @api.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -49,10 +48,17 @@ def login():
         return jsonify({"msg": "Credenciales incorrectas"}), 401
 
     token = create_access_token(identity=usuario.id)
-    return jsonify({"access_token": token}), 200
+    return jsonify({
+        "token": token,
+        "user": {
+            "id": usuario.id,
+            "email": usuario.email
+        }
+    }), 200
+
 
 @api.route('/private', methods=['GET'])
 @jwt_required()
 def private():
     current_user_id = get_jwt_identity()
-    return jsonify({"msg": f"Bienvenido, usuario con ID {current_user_id}"}), 200
+    return jsonify({"message": f"Bienvenido, usuario con ID {current_user_id}"}), 200

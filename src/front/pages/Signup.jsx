@@ -6,6 +6,13 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/private");
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await fetch(process.env.BACKEND_URL + "/api/signup", {

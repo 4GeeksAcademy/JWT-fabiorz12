@@ -1,9 +1,10 @@
+
+
 export const initialStore = () => {
     return {
         user: null,
         token: null,
-        // otras propiedades del estado global
-        actions: {} // se sobrescribirá más adelante para tener acceso al dispatch
+        actions: {} 
     };
 };
 
@@ -26,7 +27,7 @@ const storeReducer = (state, action) => {
     }
 };
 
-// Aquí se definen las acciones que modifican el estado global
+
 export const createActions = (dispatch) => {
     return {
         login: async (email, password) => {
@@ -49,7 +50,7 @@ export const createActions = (dispatch) => {
                     }
                 });
 
-                // Puedes guardar el token si quieres persistencia
+                
                 localStorage.setItem("token", data.token);
 
                 return true;

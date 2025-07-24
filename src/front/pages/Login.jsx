@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import { useEffect } from "react";
 
 const Login = () => {
   const { store, dispatch } = useGlobalReducer();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        navigate("/private");
+    }
+}, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

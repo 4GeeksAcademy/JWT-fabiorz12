@@ -6,7 +6,7 @@ const Private = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;
